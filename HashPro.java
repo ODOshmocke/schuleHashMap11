@@ -32,11 +32,9 @@ public class HashPro extends JFrame {
   private JComboBox<String> jComboBox1 = new JComboBox<>();
     private DefaultComboBoxModel<String> jComboBox1Model = new DefaultComboBoxModel<>();
   private JButton bHinzu2 = new JButton();
-  private JTextField jTextField2 = new JTextField();
   private JLabel lSchueler1 = new JLabel();
   private JLabel lFach1 = new JLabel();
   private JLabel lNote1 = new JLabel();
-  private JLabel lInformation1 = new JLabel();
   private JComboBox<String> jBoxNamen = new JComboBox<>();
     private DefaultComboBoxModel<String> jBoxNamenModel = new DefaultComboBoxModel<>();
   private JComboBox<String> jBoxFach = new JComboBox<>();
@@ -82,7 +80,7 @@ public class HashPro extends JFrame {
     jComboBox1Model.addElement("Englisch");
     jComboBox1.setBounds(96, 168, 80, 32);
     cp.add(jComboBox1);
-    bHinzu2.setBounds(384, 168, 88, 32);
+    bHinzu2.setBounds(288, 168, 184, 32);
     bHinzu2.setText("Hinzu.");
     bHinzu2.setMargin(new Insets(2, 2, 2, 2));
     bHinzu2.addActionListener(new ActionListener() { 
@@ -91,8 +89,6 @@ public class HashPro extends JFrame {
       }
     });
     cp.add(bHinzu2);
-    jTextField2.setBounds(280, 168, 88, 32);
-    cp.add(jTextField2);
     lSchueler1.setBounds(16, 128, 64, 24);
     lSchueler1.setText("Schüler");
     cp.add(lSchueler1);
@@ -102,20 +98,20 @@ public class HashPro extends JFrame {
     lNote1.setBounds(192, 128, 64, 24);
     lNote1.setText("Note");
     cp.add(lNote1);
-    lInformation1.setBounds(288, 128, 69, 24);
-    lInformation1.setText("Information");
-    cp.add(lInformation1);
     jBoxNamen.setModel(jBoxNamenModel);
     jBoxNamen.setBounds(16, 296, 80, 24);
     jBoxNamenModel.addElement("America");
     jBoxNamenModel.addElement("Europe");
     jBoxNamenModel.addElement("Asia");
+    jBoxNamen.setVisible(false);
+
     cp.add(jBoxNamen);
     jBoxFach.setModel(jBoxFachModel);
     jBoxFachModel.addElement("America");
     jBoxFachModel.addElement("Europe");
     jBoxFachModel.addElement("Asia");
     jBoxFach.setBounds(112, 296, 80, 24);
+    jBoxFach.setVisible(false);
     cp.add(jBoxFach);
     
     jBoxNote.setBounds(208, 296, 80, 24);
@@ -124,6 +120,7 @@ public class HashPro extends JFrame {
     jBoxNoteModel.addElement("Europe");
     jBoxNoteModel.addElement("Asia");
     jBoxNoteModel.addElement("quntin");
+    jBoxNote.setVisible(false);
     cp.add(jBoxNote);
     
     
@@ -132,9 +129,21 @@ public class HashPro extends JFrame {
     jBoxNamen.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String name = jBoxNamenModel.getElementAt(jBoxNamen.getSelectedIndex());
-                System.out.println(name);
+        
+            DefaultComboBoxModel<String> fachModel = new DefaultComboBoxModel<>();
+        
+            System.out.println(jBoxNamen.getSelectedItem());
+
+           // Elemente aus der Liste hinzufügen
+            for (String elementFach : uebersichtSchueler.get(jBoxNamen.getSelectedItem()).keySet()) {
+                fachModel.addElement(elementFach);
             }
+        
+              jBoxFach.setModel(fachModel);
+              System.out.println(fachModel);       
+                  
+                 
+              }
         });
     
     jBoxFach.addActionListener(new ActionListener() {
@@ -183,19 +192,21 @@ public class HashPro extends JFrame {
     String fach = jComboBox1Model.getElementAt(jComboBox1.getSelectedIndex());
     
     int note = jNumberField1.getInt();
-    String information = jTextField2.getText();
     
     
-    HashMap<String, ArrayList<Integer>> fachMap = uebersichtSchueler.getOrDefault(name, new ArrayList<Integer>());
+    HashMap<String, ArrayList<Integer>> fachMap = uebersichtSchueler.getOrDefault(name, new HashMap<String, ArrayList<Integer>>());
 
     // Bestehende Noten-Map holen oder neue erstellen
     
     
-    ArrayList<Integer> notenListe = fachMap.get(name);
+    ArrayList<Integer> notenListe = fachMap.getOrDefault(fach, new ArrayList<Integer>());
+    
+    
+    System.out.println(notenListe);
     
     notenListe.add(note);
     
-    fachMap.add(fach, notenListe);
+    fachMap.put(fach, notenListe);
     
     uebersichtSchueler.put(name, fachMap);
 
@@ -203,14 +214,26 @@ public class HashPro extends JFrame {
 
 
     
-    System.out.println("Note Map: " + noteInformation);
 
     System.out.println("Fach Map :" + fachMap);
     
     System.out.println("Uebersicht Schüler" + uebersichtSchueler);
     
     
-    //Liste lieber verwenden
+    //Für die erste ComboBox die Liste hinzu
+    
+     DefaultComboBoxModel<String> namenModel = new DefaultComboBoxModel<>();
+
+     // Elemente aus der Liste hinzufügen
+    for (String elementName : uebersichtSchueler.keySet()) {
+        namenModel.addElement(elementName);
+    }
+
+      jBoxNamen.setModel(namenModel);
+      System.out.println(namenModel);
+    
+    jBoxNamen.setVisible(true);
+    
     
     
     
